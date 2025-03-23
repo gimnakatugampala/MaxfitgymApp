@@ -53,7 +53,7 @@ const GetStartedScreen = () => {
             </Swiper>
 
             {/* Get Started Button */}
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home')}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('PhoneNumber')}>
                 <Text style={styles.buttonText}>Get Started</Text>
             </TouchableOpacity>
         </View>
