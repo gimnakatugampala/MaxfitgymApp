@@ -11,7 +11,7 @@ const PhoneNumberScreen = () => {
 
   const handleNext = () => {
     // Navigate to the next screen
-    navigation.navigate('NextScreen'); // Replace 'NextScreen' with the actual screen name
+    navigation.navigate('VerificationPhoneNumber'); // Replace 'NextScreen' with the actual screen name
   };
 
   return (
