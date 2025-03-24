@@ -19,7 +19,8 @@ const MembershipDetailsScreen = () => {
     }
 
     // Navigate to the next screen (Replace 'NextScreen' with the actual screen name)
-    navigation.navigate('NextScreen');
+    navigation.navigate('HomeNav', { screen: 'Home' });
+
   };
 
   return (
