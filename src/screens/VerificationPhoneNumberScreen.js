@@ -32,7 +32,7 @@ const VerificationPhoneNumberScreen = () => {
     }
 
     // Navigate to the next screen (Replace 'HomeScreen' with the actual screen name)
-    navigation.navigate('HomeScreen');
+    navigation.navigate('MembershipDetails');
   };
 
   return (
