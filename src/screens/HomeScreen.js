@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000000',
-    padding: 30,  
+    padding: 20,  
   },
   title: {
     fontSize: 28,  
@@ -126,8 +126,7 @@ const styles = StyleSheet.create({
     fontSize: 22,  
     fontWeight: 'bold',
     color: '#ffd300',
-    marginTop: 30,  
-    marginBottom: 15,  
+    marginVertical: 10
   },
   startButton: {
     marginTop: 20,  
@@ -142,11 +141,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
-  },
-  subTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#ffd300',
   },
   seeAll: {
     fontSize: 16,
@@ -164,7 +158,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: 150,
     alignItems: 'center',
-    marginHorizontal: 5,
+    marginHorizontal: 10,
   },
   metricTitle: {
     fontSize: 14,
