@@ -1,14 +1,76 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, ScrollView, Image } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, Image, SafeAreaView } from 'react-native';
+import Svg, { Rect } from 'react-native-svg';
+
+// Path to your uploaded image (Update with correct local URI)
+const profileImageUri = 'file:///mnt/data/f2061be2806d4a95ddef354440ec7fa8.jpg';
+
+// Generate a training log for 365 days (52 weeks + 1 extra week)
+const generateTrainingData = () => {
+  const daysInYear = 365;
+  return Array.from({ length: daysInYear }, () => Math.floor(Math.random() * 4)); // Random values 0-3
+};
+
+const trainingData = generateTrainingData();
+
+const TrainingLog = () => {
+  const cellSize = 6; // Small square size
+  const padding = 1; // Space between squares
+  const weeks = 52; // Number of weeks
+  const days = 7; // Days per week
+
+  const totalDays = trainingData.length;
+  const width = weeks * (cellSize + padding); // Horizontal width
+  const height = 7 * (cellSize + padding); // 7 rows (days of the week)
+
+  // Color scale (Intensity)
+  const getColor = (value) => {
+    switch (value) {
+      case 0: return '#333';  // No activity
+      case 1: return '#66ff66'; // Low
+      case 2: return '#33cc33'; // Medium
+      case 3: return '#009900'; // High
+      default: return '#000';
+    }
+  };
+
+  return (
+    <View>
+      <Svg width={width} height={height}>
+        {trainingData.map((value, index) => {
+          const x = Math.floor(index / days) * (cellSize + padding);
+          const y = (index % days) * (cellSize + padding);
+
+          return (
+            <Rect
+              key={index}
+              x={x}
+              y={y}
+              width={cellSize}
+              height={cellSize}
+              fill={getColor(value)}
+              rx={2}
+              ry={2}
+            />
+          );
+        })}
+      </Svg>
+    </View >
+  );
+};
 
 const ProfileScreen = () => {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.profileHeader}>
-        <Image 
-          source={{ uri: 'https://via.placeholder.com/150' }} 
-          style={styles.profileImage} 
-        />
+        {/* Profile Image */}
+        <View style={styles.profileImageContainer}>
+          <Image
+            source={{ uri: profileImageUri }}
+            style={styles.profileImage}
+          />
+        </View>
+
         <Text style={styles.userName}>Jonny</Text>
         <Text style={styles.userLocation}>📍 Los Angeles, CA</Text>
         <Text style={styles.joinDate}>🕒 Joined 18th Oct</Text>
@@ -24,15 +86,9 @@ const ProfileScreen = () => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Training Log</Text>
         <Text style={styles.sectionSubtitle}>A twelve-month review of your training</Text>
-        <View style={styles.logPlaceholder}></View>
+        <TrainingLog />
       </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Momentum</Text>
-        <Text style={styles.sectionSubtitle}>Your training momentum charted</Text>
-        <View style={styles.momentumPlaceholder}></View>
-      </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -46,13 +102,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
   },
-  profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 3,
+  profileImageContainer: {
+    borderRadius: 50, // Ensures a circular image
+    overflow: 'hidden',
+    borderWidth: 2,
     borderColor: '#fff',
     marginBottom: 10,
+  },
+  profileImage: {
+    width: 100, // Adjust size as needed
+    height: 100,
+    borderRadius: 50,
   },
   userName: {
     fontSize: 24,
@@ -103,16 +163,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#aaa',
     marginBottom: 10,
-  },
-  logPlaceholder: {
-    backgroundColor: '#222',
-    height: 100,
-    borderRadius: 10,
-  },
-  momentumPlaceholder: {
-    backgroundColor: '#222',
-    height: 80,
-    borderRadius: 10,
   },
 });
 
