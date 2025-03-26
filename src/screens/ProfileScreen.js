@@ -56,6 +56,7 @@ const momentumData = generateMomentumData();
 
 const MomentumChart = () => {
   return (
+    <View style={{ alignItems: 'flex-start' }}>
     <LineChart
       data={{
         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
@@ -69,14 +70,15 @@ const MomentumChart = () => {
         backgroundGradientFrom: "#000",
         backgroundGradientTo: "#000",
         decimalPlaces: 0,
-        color: (opacity = 1) => `rgba(102, 255, 102, ${opacity})`,
+        color: (opacity = 1) => `rgba(255, 211, 0, ${opacity})`,
         labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
         style: { borderRadius: 16 },
-        propsForDots: { r: "4", strokeWidth: "2", stroke: "#66ff66" },
+        propsForDots: { r: "4", strokeWidth: "2", stroke: "#ffd300" },
       }}
       bezier
       style={{ marginVertical: 8, borderRadius: 16 }}
     />
+    </View>
   );
 };
 
