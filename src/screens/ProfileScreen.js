@@ -28,9 +28,9 @@ const TrainingLog = () => {
   const getColor = (value) => {
     switch (value) {
       case 0: return '#333';
-      case 1: return '#66ff66';
-      case 2: return '#33cc33';
-      case 3: return '#009900';
+      case 1: return '#fff8d8';
+      case 2: return '#ffd300';
+      case 3: return '#b39400';
       default: return '#000';
     }
   };
