@@ -1,18 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, 
-  FlatList, Dimensions 
-} from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, FlatList, Dimensions } from 'react-native';
+import moment from 'moment';
 import Svg, { Circle } from 'react-native-svg';
 import { LineChart } from 'react-native-chart-kit';
-import moment from 'moment';
 
 const { width } = Dimensions.get('window');
 
 const InsightsScreen = () => {
-  const allDates = Array.from({ length: 30 }, (_, i) => moment().subtract(15 - i, 'days')); // Generate past & future days
-  const todayIndex = allDates.findIndex(date => date.isSame(moment(), 'day')); // Find index of today
-  const [selectedDate, setSelectedDate] = useState(moment()); // Default to today
+  const allDates = Array.from({ length: 30 }, (_, i) => moment().subtract(15 - i, 'days'));
+  const todayIndex = allDates.findIndex(date => date.isSame(moment(), 'day'));
+  const [selectedDate, setSelectedDate] = useState(moment());
   const flatListRef = useRef(null);
 
   useEffect(() => {
@@ -21,9 +18,9 @@ const InsightsScreen = () => {
         flatListRef.current.scrollToIndex({
           index: todayIndex,
           animated: true,
-          viewPosition: 0.5, // Centers the item
+          viewPosition: 0.5,
         });
-      }, 300); // Ensures UI is rendered before scrolling
+      }, 300);
     }
   }, []);
 
@@ -34,10 +31,11 @@ const InsightsScreen = () => {
   const renderItem = ({ item }) => {
     const isSelected = selectedDate.isSame(item, 'day');
     return (
-      <TouchableOpacity onPress={() => handleDateSelection(item)} style={styles.dateItem}>
-        <Text style={[styles.dateText, isSelected && styles.selectedDate]}>
-          {isSelected && item.isSame(moment(), 'day') ? "Today" : item.format('DD MMM')}
-        </Text>
+      <TouchableOpacity onPress={() => handleDateSelection(item)} style={[styles.dateItem, isSelected && styles.selectedDateItem]}>
+        <Text style={[styles.dayText, isSelected && styles.selectedDayText]}>{item.format('ddd')}</Text>
+        <View style={[styles.dateCircle, isSelected && styles.selectedDateCircle]}>
+          <Text style={[styles.dateText, isSelected && styles.selectedDateText]}>{item.format('DD')}</Text>
+        </View>
       </TouchableOpacity>
     );
   };
@@ -45,7 +43,6 @@ const InsightsScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        
         {/* Date Selector */}
         <FlatList
           ref={flatListRef}
@@ -55,80 +52,80 @@ const InsightsScreen = () => {
           keyExtractor={(item) => item.format('YYYY-MM-DD')}
           renderItem={renderItem}
           contentContainerStyle={styles.dateContainer}
-          initialScrollIndex={todayIndex >= 0 ? todayIndex : 0} // Prevents crashes
-          getItemLayout={(data, index) => ({ length: 50, offset: 50 * index, index })} // Optimized scrolling
+          initialScrollIndex={todayIndex >= 0 ? todayIndex : 0}
+          getItemLayout={(data, index) => ({ length: 70, offset: 70 * index, index })}
         />
-
-        {/* Health Grade */}
-        <View style={styles.healthGradeContainer}>
-          <View>
-            <Text style={styles.healthGradeTitle}>Health Grade</Text>
-            <Text style={styles.healthGradeSubtitle}>
-              Perfect progress dude, keep going to apply your fitness activity
-            </Text>
-          </View>
-          <View style={styles.progressCircle}>
-            <Svg height="60" width="60">
-              <Circle cx="30" cy="30" r="25" stroke="#ffd300" strokeWidth="4" fill="none" />
-              <Text style={styles.progressText}>80</Text>
-            </Svg>
-          </View>
-        </View>
-
-        {/* Health Metrics */}
-        <View style={styles.metricsContainer}>
-          <View style={styles.metricBox}>
-            <Text style={styles.metricValue}>620.98</Text>
-            <Text style={styles.metricLabel}>Calories</Text>
-          </View>
-          <View style={styles.metricBox}>
-            <Text style={styles.metricValue}>70.98</Text>
-            <Text style={styles.metricLabel}>Weight (kg)</Text>
-          </View>
-          <View style={styles.metricBox}>
-            <Text style={styles.metricValue}>120</Text>
-            <Text style={styles.metricLabel}>Blood Pressure</Text>
-          </View>
-          <View style={styles.metricBox}>
-            <Text style={styles.metricValue}>80</Text>
-            <Text style={styles.metricLabel}>Heart Beat (bpm)</Text>
-          </View>
-        </View>
-
-        {/* Workout Chart */}
-        <View style={styles.workoutContainer}>
-          <View style={styles.workoutHeader}>
-            <Text style={styles.sectionTitle}>Workout</Text>
-            <View style={styles.workoutTabs}>
-              {["Week", "Day", "Month"].map((tab, index) => (
-                <Text key={index} style={[styles.workoutTab, tab === "Week" && styles.activeTab]}>
-                  {tab}
-                </Text>
-              ))}
-            </View>
-          </View>
-          <LineChart
-            data={{
-              labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-              datasets: [{ data: [20, 45, 28, 80, 99, 43, 50] }],
-            }}
-            width={width - 40}
-            height={200}
-            chartConfig={{
-              backgroundColor: "#000",
-              backgroundGradientFrom: "#000",
-              backgroundGradientTo: "#000",
-              decimalPlaces: 0,
-              color: (opacity = 1) => `rgba(255, 211, 0, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-              propsForDots: { r: "4", strokeWidth: "2", stroke: "#ffd300" },
-            }}
-            bezier
-            style={{ marginVertical: 8, borderRadius: 16 }}
-          />
-        </View>
-
+       {/* Health Grade */}
+              <View style={styles.healthGradeContainer}>
+                <View>
+                  <Text style={styles.healthGradeTitle}>Health Grade</Text>
+                  <Text style={styles.healthGradeSubtitle}>
+                    Perfect progress dude, keep going to apply your fitness activity
+                  </Text>
+                </View>
+                <View style={styles.progressCircle}>
+                  <Svg height="60" width="60">
+                    <Circle cx="30" cy="30" r="25" stroke="#ffd300" strokeWidth="4" fill="none" />
+                    <Text style={styles.progressText}>80</Text>
+                  </Svg>
+                </View>
+              </View>
+      
+              {/* Health Metrics */}
+              <View style={styles.metricsContainer}>
+                <View style={styles.metricBox}>
+                  <Text style={styles.metricValue}>620.98</Text>
+                  <Text style={styles.metricLabel}>Calories</Text>
+                </View>
+                <View style={styles.metricBox}>
+                  <Text style={styles.metricValue}>70.98</Text>
+                  <Text style={styles.metricLabel}>Weight (kg)</Text>
+                </View>
+                <View style={styles.metricBox}>
+                  <Text style={styles.metricValue}>120</Text>
+                  <Text style={styles.metricLabel}>Blood Pressure</Text>
+                </View>
+                <View style={styles.metricBox}>
+                  <Text style={styles.metricValue}>80</Text>
+                  <Text style={styles.metricLabel}>Heart Beat (bpm)</Text>
+                </View>
+              </View>
+      
+              {/* Workout Chart */}
+              <View style={styles.workoutContainer}>
+                <View style={styles.workoutHeader}>
+                  <Text style={styles.sectionTitle}>Workout</Text>
+                  <View style={styles.workoutTabs}>
+                    {["Week", "Day", "Month"].map((tab, index) => (
+                      <Text key={index} style={[styles.workoutTab, tab === "Week" && styles.activeTab]}>
+                        {tab}
+                      </Text>
+                    ))}
+                  </View>
+                </View>
+                <LineChart
+                  data={{
+                    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                    datasets: [{ data: [20, 45, 28, 80, 99, 43, 50] }],
+                  }}
+                  width={width - 40}
+                  height={200}
+                  chartConfig={{
+                    backgroundColor: "#000",
+                    backgroundGradientFrom: "#000",
+                    backgroundGradientTo: "#000",
+                    decimalPlaces: 0,
+                    color: (opacity = 1) => `rgba(255, 211, 0, ${opacity})`,
+                    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                    propsForDots: { r: "4", strokeWidth: "2", stroke: "#ffd300" },
+                  }}
+                  bezier
+                  style={{ marginVertical: 8, borderRadius: 16 }}
+                />
+              </View>
+              
       </ScrollView>
+
     </SafeAreaView>
   );
 };
@@ -146,20 +143,58 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 10,
+    paddingHorizontal: 10,
   },
   dateItem: {
-    paddingHorizontal: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+    marginHorizontal: 5,
+  },
+  selectedDateItem: {
+    borderRadius: 20,
+    backgroundColor: '#ffd300',
+    padding: 5,
+  },
+  dayText: {
+    color: '#aaa',
+    fontSize: 14,
+    fontWeight: '500',
+    marginBottom: 5,
+  },
+  selectedDayText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  dateCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#222',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  selectedDateCircle: {
+    backgroundColor: '#fff',
   },
   dateText: {
     color: '#fff',
-    fontSize: 14,
-    opacity: 0.5,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  selectedDateText: {
+    color: '#000',
   },
   selectedDate: {
-    color: '#ffd300',
+    backgroundColor: '#ffd300',
+    color: '#000',
     fontWeight: 'bold',
     opacity: 1,
     fontSize: 16,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 20,
+    textAlign: 'center',
   },
   healthGradeContainer: {
     backgroundColor: '#111',
