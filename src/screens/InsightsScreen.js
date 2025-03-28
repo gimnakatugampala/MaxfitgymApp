@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Fla
 import moment from 'moment';
 import Svg, { Circle } from 'react-native-svg';
 import { LineChart } from 'react-native-chart-kit';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const { width } = Dimensions.get('window');
 
@@ -72,15 +73,18 @@ const InsightsScreen = () => {
           </View>
         </View>
 
-        {/* Health Metrics */}
-        <View style={styles.metricsContainer}>
+          {/* Health Metrics */}
+          <View style={styles.metricsContainer}>
           {[
-            { label: "Calories", value: "620.98" },
-            { label: "Weight (kg)", value: "70.98" },
-            { label: "Blood Pressure", value: "120" },
-            { label: "Heart Beat (bpm)", value: "80" },
+            { label: "Calories", value: "620.98", icon: "fire" },
+            { label: "Weight (kg)", value: "70.98", icon: "weight-kilogram" },
+            { label: "Bicep Size (cm)", value: "35.5", icon: "arm-flex" },
+            { label: "Hip Size (cm)", value: "98.2", icon: "human-female" },
+            { label: "Chest Size (cm)", value: "105.3", icon: "human-male" },
+            { label: "MAX H/R", value: "180", icon: "heart-pulse" },
           ].map((metric, index) => (
             <View key={index} style={[styles.metricBox, { width: (width - 60) / 2 }]}>
+              <Icon name={metric.icon} size={30} color="#ffd300" />
               <Text style={styles.metricValue}>{metric.value}</Text>
               <Text style={styles.metricLabel}>{metric.label}</Text>
             </View>
