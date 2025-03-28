@@ -55,77 +55,71 @@ const InsightsScreen = () => {
           initialScrollIndex={todayIndex >= 0 ? todayIndex : 0}
           getItemLayout={(data, index) => ({ length: 70, offset: 70 * index, index })}
         />
-       {/* Health Grade */}
-              <View style={styles.healthGradeContainer}>
-                <View>
-                  <Text style={styles.healthGradeTitle}>Health Grade</Text>
-                  <Text style={styles.healthGradeSubtitle}>
-                    Perfect progress dude, keep going to apply your fitness activity
-                  </Text>
-                </View>
-                <View style={styles.progressCircle}>
-                  <Svg height="60" width="60">
-                    <Circle cx="30" cy="30" r="25" stroke="#ffd300" strokeWidth="4" fill="none" />
-                    <Text style={styles.progressText}>80</Text>
-                  </Svg>
-                </View>
-              </View>
-      
-              {/* Health Metrics */}
-              <View style={styles.metricsContainer}>
-                <View style={styles.metricBox}>
-                  <Text style={styles.metricValue}>620.98</Text>
-                  <Text style={styles.metricLabel}>Calories</Text>
-                </View>
-                <View style={styles.metricBox}>
-                  <Text style={styles.metricValue}>70.98</Text>
-                  <Text style={styles.metricLabel}>Weight (kg)</Text>
-                </View>
-                <View style={styles.metricBox}>
-                  <Text style={styles.metricValue}>120</Text>
-                  <Text style={styles.metricLabel}>Blood Pressure</Text>
-                </View>
-                <View style={styles.metricBox}>
-                  <Text style={styles.metricValue}>80</Text>
-                  <Text style={styles.metricLabel}>Heart Beat (bpm)</Text>
-                </View>
-              </View>
-      
-              {/* Workout Chart */}
-              <View style={styles.workoutContainer}>
-                <View style={styles.workoutHeader}>
-                  <Text style={styles.sectionTitle}>Workout</Text>
-                  <View style={styles.workoutTabs}>
-                    {["Week", "Day", "Month"].map((tab, index) => (
-                      <Text key={index} style={[styles.workoutTab, tab === "Week" && styles.activeTab]}>
-                        {tab}
-                      </Text>
-                    ))}
-                  </View>
-                </View>
-                <LineChart
-                  data={{
-                    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-                    datasets: [{ data: [20, 45, 28, 80, 99, 43, 50] }],
-                  }}
-                  width={width - 40}
-                  height={200}
-                  chartConfig={{
-                    backgroundColor: "#000",
-                    backgroundGradientFrom: "#000",
-                    backgroundGradientTo: "#000",
-                    decimalPlaces: 0,
-                    color: (opacity = 1) => `rgba(255, 211, 0, ${opacity})`,
-                    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                    propsForDots: { r: "4", strokeWidth: "2", stroke: "#ffd300" },
-                  }}
-                  bezier
-                  style={{ marginVertical: 8, borderRadius: 16 }}
-                />
-              </View>
-              
-      </ScrollView>
 
+        {/* Health Grade */}
+        <View style={[styles.healthGradeContainer, { width: width - 40 }]}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.healthGradeTitle}>Health Grade</Text>
+            <Text style={styles.healthGradeSubtitle}>
+              Perfect progress dude, keep going to apply your fitness activity
+            </Text>
+          </View>
+          <View style={styles.progressCircle}>
+            <Svg height="70" width="70">
+              <Circle cx="35" cy="35" r="30" stroke="#ffd300" strokeWidth="4" fill="none" />
+            </Svg>
+            <Text style={styles.progressText}>80</Text>
+          </View>
+        </View>
+
+        {/* Health Metrics */}
+        <View style={styles.metricsContainer}>
+          {[
+            { label: "Calories", value: "620.98" },
+            { label: "Weight (kg)", value: "70.98" },
+            { label: "Blood Pressure", value: "120" },
+            { label: "Heart Beat (bpm)", value: "80" },
+          ].map((metric, index) => (
+            <View key={index} style={[styles.metricBox, { width: (width - 60) / 2 }]}>
+              <Text style={styles.metricValue}>{metric.value}</Text>
+              <Text style={styles.metricLabel}>{metric.label}</Text>
+            </View>
+          ))}
+        </View>
+
+        {/* Workout Chart */}
+        <View style={styles.workoutContainer}>
+          <View style={styles.workoutHeader}>
+            <Text style={styles.sectionTitle}>Workout</Text>
+            <View style={styles.workoutTabs}>
+              {["Week", "Day", "Month"].map((tab, index) => (
+                <Text key={index} style={[styles.workoutTab, tab === "Week" && styles.activeTab]}>
+                  {tab}
+                </Text>
+              ))}
+            </View>
+          </View>
+          <LineChart
+            data={{
+              labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+              datasets: [{ data: [20, 45, 28, 80, 99, 43, 50] }],
+            }}
+            width={width - 40}
+            height={200}
+            chartConfig={{
+              backgroundColor: "#000",
+              backgroundGradientFrom: "#000",
+              backgroundGradientTo: "#000",
+              decimalPlaces: 0,
+              color: (opacity = 1) => `rgba(255, 211, 0, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              propsForDots: { r: "4", strokeWidth: "2", stroke: "#ffd300" },
+            }}
+            bezier
+            style={{ marginVertical: 8, borderRadius: 16 }}
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -143,7 +137,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 10,
-    paddingHorizontal: 10,
   },
   dateItem: {
     alignItems: 'center',
@@ -159,8 +152,6 @@ const styles = StyleSheet.create({
   dayText: {
     color: '#aaa',
     fontSize: 14,
-    fontWeight: '500',
-    marginBottom: 5,
   },
   selectedDayText: {
     color: '#fff',
@@ -185,25 +176,14 @@ const styles = StyleSheet.create({
   selectedDateText: {
     color: '#000',
   },
-  selectedDate: {
-    backgroundColor: '#ffd300',
-    color: '#000',
-    fontWeight: 'bold',
-    opacity: 1,
-    fontSize: 16,
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 20,
-    textAlign: 'center',
-  },
   healthGradeContainer: {
     backgroundColor: '#111',
     padding: 20,
     borderRadius: 12,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 20,
+    alignSelf: 'center',
   },
   healthGradeTitle: {
     fontSize: 18,
@@ -214,16 +194,16 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#aaa',
     marginTop: 4,
-    width: '70%',
   },
   progressCircle: {
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative',
   },
   progressText: {
     position: 'absolute',
-    top: 20,
-    left: 22,
+    top: 22,
+    left: 25,
     fontSize: 18,
     fontWeight: 'bold',
     color: '#ffd300',
@@ -238,7 +218,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#111',
     padding: 15,
     borderRadius: 10,
-    width: '48%',
     alignItems: 'center',
     marginBottom: 10,
   },
@@ -250,32 +229,6 @@ const styles = StyleSheet.create({
   metricLabel: {
     fontSize: 14,
     color: '#bbb',
-  },
-  workoutContainer: {
-    marginBottom: 20,
-  },
-  workoutHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  workoutTabs: {
-    flexDirection: 'row',
-  },
-  workoutTab: {
-    fontSize: 14,
-    color: '#aaa',
-    marginLeft: 10,
-  },
-  activeTab: {
-    color: '#ffd300',
-    fontWeight: 'bold',
   },
 });
 
