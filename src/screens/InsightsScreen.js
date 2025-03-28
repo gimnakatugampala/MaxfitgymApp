@@ -41,6 +41,42 @@ const InsightsScreen = () => {
     );
   };
 
+  const [selectedFilter, setSelectedFilter] = useState('Weekly');
+  const filterOptions = ['Weekly', 'Monthly', 'Yearly'];
+
+  const chartData = {
+    Weekly: {
+      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      data: [70, 71, 69, 72, 70, 73, 71],
+    },
+    Monthly: {
+      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+      data: [69, 70, 72, 71],
+    },
+    Yearly: {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+      data: [65, 68, 70, 72, 75, 78, 80],
+    },
+  };
+
+  const renderChart = (label, dataObj) => (
+    <View style={styles.chartContainer}>
+      <Text style={styles.chartTitle}>{label}</Text>
+      <LineChart
+        data={{
+          labels: dataObj.labels,
+          datasets: [{ data: dataObj.data }],
+        }}
+        width={width - 40}
+        height={200}
+        chartConfig={chartConfig}
+        bezier
+        style={styles.chartStyle}
+      />
+    </View>
+  );
+
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -91,41 +127,50 @@ const InsightsScreen = () => {
           ))}
         </View>
 
-        {/* Workout Chart */}
-        <View style={styles.workoutContainer}>
-          <View style={styles.workoutHeader}>
-            <Text style={styles.sectionTitle}>Workout</Text>
-            <View style={styles.workoutTabs}>
-              {["Week", "Day", "Month"].map((tab, index) => (
-                <Text key={index} style={[styles.workoutTab, tab === "Week" && styles.activeTab]}>
-                  {tab}
-                </Text>
-              ))}
-            </View>
-          </View>
-          <LineChart
-            data={{
-              labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-              datasets: [{ data: [20, 45, 28, 80, 99, 43, 50] }],
-            }}
-            width={width - 40}
-            height={200}
-            chartConfig={{
-              backgroundColor: "#000",
-              backgroundGradientFrom: "#000",
-              backgroundGradientTo: "#000",
-              decimalPlaces: 0,
-              color: (opacity = 1) => `rgba(255, 211, 0, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-              propsForDots: { r: "4", strokeWidth: "2", stroke: "#ffd300" },
-            }}
-            bezier
-            style={{ marginVertical: 8, borderRadius: 16 }}
-          />
-        </View>
+            {/* Filter Tabs */}
+                <View style={styles.filterContainer}>
+                  {filterOptions.map((option) => (
+                    <TouchableOpacity
+                      key={option}
+                      style={[styles.filterTab, selectedFilter === option && styles.activeFilterTab]}
+                      onPress={() => setSelectedFilter(option)}
+                    >
+                      <Text style={[styles.filterText, selectedFilter === option && styles.activeFilterText]}>
+                        {option}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+        
+                {/* Charts */}
+                {renderChart('Weight (kg)', chartData[selectedFilter])}
+                {renderChart('Bicep Size (cm)', {
+                  labels: chartData[selectedFilter].labels,
+                  data: chartData[selectedFilter].data.map(value => value - 35),
+                })}
+                {renderChart('Hip Size (cm)', {
+                  labels: chartData[selectedFilter].labels,
+                  data: chartData[selectedFilter].data.map(value => value + 25),
+                })}
+                {renderChart('Chest Size (cm)', {
+                  labels: chartData[selectedFilter].labels,
+                  data: chartData[selectedFilter].data.map(value => value + 35),
+                })}
+
+
       </ScrollView>
     </SafeAreaView>
   );
+};
+
+const chartConfig = {
+  backgroundColor: '#000',
+  backgroundGradientFrom: '#000',
+  backgroundGradientTo: '#000',
+  decimalPlaces: 0,
+  color: (opacity = 1) => `rgba(255, 211, 0, ${opacity})`,
+  labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+  propsForDots: { r: '4', strokeWidth: '2', stroke: '#ffd300' },
 };
 
 const styles = StyleSheet.create({
@@ -233,6 +278,40 @@ const styles = StyleSheet.create({
   metricLabel: {
     fontSize: 14,
     color: '#bbb',
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 10,
+  },
+  filterTab: {
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#ffd300',
+  },
+  activeFilterTab: {
+    backgroundColor: '#ffd300',
+  },
+  filterText: {
+    color: '#ffd300',
+    fontWeight: 'bold',
+  },
+  activeFilterText: {
+    color: '#000',
+  },
+  chartContainer: {
+    marginBottom: 20,
+  },
+  chartTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 10,
+  },
+  chartStyle: {
+    borderRadius: 16,
   },
 });
 
