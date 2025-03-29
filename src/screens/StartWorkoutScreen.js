@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  View, Text, StyleSheet, TouchableOpacity, ImageBackground, FlatList, Alert, Dimensions
+  View, Text, StyleSheet, TouchableOpacity, ImageBackground, FlatList, Alert, Dimensions 
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
@@ -10,7 +10,7 @@ const { height } = Dimensions.get("window");
 const workouts = [
   { title: "Weight Lifting", time: 10, type: 'duration', image: "https://images.pexels.com/photos/3289711/pexels-photo-3289711.jpeg" },
   { title: "Cardio Blast", time: 15, type: 'duration', image: "https://images.pexels.com/photos/1552249/pexels-photo-1552249.jpeg" },
-  { title: "HIIT Training", time: 10, type: 'set', sets: 3, reps: 5, image: "https://images.pexels.com/photos/1552106/pexels-photo-1552106.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load" }
+  { title: "HIIT Training", time: 10, type: 'set', sets: 3, reps: 8, image: "https://images.pexels.com/photos/1552106/pexels-photo-1552106.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load" },
 ];
 
 const StartWorkoutScreen = () => {
@@ -19,7 +19,7 @@ const StartWorkoutScreen = () => {
   const [currentWorkout, setCurrentWorkout] = useState(0);
   const [timeLeft, setTimeLeft] = useState(workouts[0].time);
   const [isRunning, setIsRunning] = useState(true);
-  const [currentRep, setCurrentRep] = useState(1);  // Track the current rep for "set" type workouts
+  const [currentSet, setCurrentSet] = useState(1);  // Track the current set for "set" type workouts
 
   useEffect(() => {
     if (isRunning && timeLeft > 0) {
@@ -29,12 +29,12 @@ const StartWorkoutScreen = () => {
       return () => clearTimeout(timer);
     } else if (timeLeft === 0) {
       if (workouts[currentWorkout].type === 'set') {
-        handleRepCompletion();  // Handle rep-based completion
+        handleSetCompletion();  // Handle set-based completion
       } else {
         handleWorkoutChange(currentWorkout + 1);  // Handle duration-based workouts
       }
     }
-  }, [isRunning, timeLeft, currentRep]);
+  }, [isRunning, timeLeft, currentSet]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -47,7 +47,7 @@ const StartWorkoutScreen = () => {
       setCurrentWorkout(index);
       setTimeLeft(workouts[index].time);
       setIsRunning(true);
-      setCurrentRep(1);  // Reset rep count
+      setCurrentSet(1);  // Reset set count
       flatListRef.current?.scrollToIndex({ index, animated: true });
     } else {
       Alert.alert("Good Job!", "You have completed all workouts.");
@@ -55,17 +55,26 @@ const StartWorkoutScreen = () => {
     }
   };
 
-  const handleRepCompletion = () => {
+  const handleSetCompletion = () => {
     const workout = workouts[currentWorkout];
 
-    if (currentRep < workout.reps) {
-      // Move to the next rep
-      setCurrentRep(prevRep => prevRep + 1);
-      setTimeLeft(workout.time);  // Reset the timer for the next rep
+    if (currentSet < workout.sets) {
+      // Reset the timer for the next set
+      setTimeLeft(workout.time);
+      setCurrentSet(prevSet => prevSet + 1);  // Move to next set
     } else {
-      // All reps completed, move to the next workout
+      // All sets completed, move to the next workout
       handleWorkoutChange(currentWorkout + 1);
     }
+  };
+
+  // Update the completed sets as a string
+  const generateSetString = (sets, currentSet) => {
+    let setString = [];
+    for (let set = 1; set <= sets; set++) {
+      setString.push(currentSet >= set ? '✅' : `${set}`);
+    }
+    return setString.join(' | ');
   };
 
   return (
@@ -121,10 +130,12 @@ const StartWorkoutScreen = () => {
             </View>
           </View>
 
-          {/* Additional Info for "set" type */}
+          {/* Displaying Set Information */}
           {item.type === 'set' && (
             <View style={styles.setInfoContainer}>
-              <Text style={styles.setInfo}>Rep {currentRep}/{item.reps}</Text>
+              <Text style={styles.setInfo}>
+                {generateSetString(item.sets, currentSet)}
+              </Text>
             </View>
           )}
 
