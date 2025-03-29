@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 import WorkoutSchedule from '../components/WorkoutSchedule';
-import HealthMetrics from '../components/HealthMetrics';
 import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 
 const healthMetrics = [
@@ -22,10 +22,9 @@ const HealthMetricCard = ({ title, value, unit, icon }) => {
   );
 };
 
-
-
-
 const HomeScreen = () => {
+  const navigation = useNavigation();
+
   return (
     <ScrollView style={styles.container}>
 
@@ -43,20 +42,14 @@ const HomeScreen = () => {
         <Button 
           mode="contained" 
           labelStyle={styles.buttonLabel}
- 
           style={styles.runningButton} 
-          onPress={() => console.log('Start Running Workout')}>
+          onPress={() => navigation.navigate('StartWorkoutScreen')}>
           ➝
         </Button>
       </View>
 
-
       {/* Health Metrics Section */}
       <Text style={styles.subTitle}>Health Metrics</Text>
-      {/* <ScrollView horizontal style={styles.horizontalScroll}>
-        <HealthMetrics />
-        
-      </ScrollView> */}
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
         <View style={styles.metricsContainer}>
@@ -120,7 +113,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffd300',
     borderRadius: 50,
     minWidth: 40,
-    color:'#000000'
   },
   subTitle: {
     fontSize: 22,  
@@ -136,17 +128,6 @@ const styles = StyleSheet.create({
   horizontalScroll: {
     marginBottom: 20,  
   },
-  metricsHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  seeAll: {
-    fontSize: 16,
-    color: '#ffd300',
-  },
-
   metricsContainer: {
     flexDirection: 'row',
     alignItems: 'center',

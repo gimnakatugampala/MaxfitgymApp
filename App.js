@@ -9,6 +9,7 @@ import PhoneNumberScreen from './src/screens/PhoneNumberScreen';
 import VerificationPhoneNumberScreen from './src/screens/VerificationPhoneNumberScreen';
 import MembershipDetailsScreen from './src/screens/MembershipDetailsScreen';
 import BottomNavigation from './src/navigation/BottomNavigation';
+import StartWorkoutScreen from './src/screens/StartWorkoutScreen';
 
 const Stack = createStackNavigator();
 
@@ -69,6 +70,7 @@ export default function App() {
         <Stack.Screen name="PhoneNumber" component={PhoneNumberScreen} />
         <Stack.Screen name="VerificationPhoneNumber" component={VerificationPhoneNumberScreen} />
         <Stack.Screen name="MembershipDetails" component={MembershipDetailsScreen} />
+        <Stack.Screen name="StartWorkoutScreen" component={StartWorkoutScreen} />
         <Stack.Screen name="HomeNav" component={BottomNavigation} />
       </Stack.Navigator>
     </NavigationContainer>
