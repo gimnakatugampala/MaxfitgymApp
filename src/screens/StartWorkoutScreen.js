@@ -9,8 +9,8 @@ const { height } = Dimensions.get("window");
 
 const workouts = [
   { title: "Weight Lifting", time: 10, type: 'duration', image: "https://images.pexels.com/photos/3289711/pexels-photo-3289711.jpeg" },
-  { title: "Cardio Blast", time: 15, type: 'duration', image: "https://images.pexels.com/photos/1552249/pexels-photo-1552249.jpeg" },
   { title: "HIIT Training", time: 10, type: 'set', sets: 3, reps: 8, image: "https://images.pexels.com/photos/1552106/pexels-photo-1552106.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load" },
+  { title: "Cardio Blast", time: 15, type: 'duration', image: "https://images.pexels.com/photos/1552249/pexels-photo-1552249.jpeg" },
 ];
 
 const StartWorkoutScreen = () => {
