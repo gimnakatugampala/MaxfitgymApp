@@ -20,6 +20,7 @@ const StartWorkoutScreen = () => {
   const [timeLeft, setTimeLeft] = useState(workouts[0].time);
   const [isRunning, setIsRunning] = useState(true);
   const [currentSet, setCurrentSet] = useState(1);  // Track the current set for "set" type workouts
+  const [completedSets, setCompletedSets] = useState([]);  // Track completed sets
 
   useEffect(() => {
     if (isRunning && timeLeft > 0) {
@@ -48,6 +49,7 @@ const StartWorkoutScreen = () => {
       setTimeLeft(workouts[index].time);
       setIsRunning(true);
       setCurrentSet(1);  // Reset set count
+      setCompletedSets([]); // Reset completed sets
       flatListRef.current?.scrollToIndex({ index, animated: true });
     } else {
       Alert.alert("Good Job!", "You have completed all workouts.");
@@ -59,6 +61,8 @@ const StartWorkoutScreen = () => {
     const workout = workouts[currentWorkout];
 
     if (currentSet < workout.sets) {
+      // Mark current set as completed
+      setCompletedSets(prevSets => [...prevSets, currentSet]);  // Add the completed set to the completed sets array
       // Reset the timer for the next set
       setTimeLeft(workout.time);
       setCurrentSet(prevSet => prevSet + 1);  // Move to next set
@@ -72,7 +76,8 @@ const StartWorkoutScreen = () => {
   const generateSetString = (sets, currentSet) => {
     let setString = [];
     for (let set = 1; set <= sets; set++) {
-      setString.push(currentSet >= set ? '✅' : `${set}`);
+      // Check if the set is completed by checking the completedSets array
+      setString.push(completedSets.includes(set) ? '✅' : `${set}`);
     }
     return setString.join(' | ');
   };
