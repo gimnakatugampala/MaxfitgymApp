@@ -8,9 +8,9 @@ import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 const { height } = Dimensions.get("window");
 
 const workouts = [
-  { title: "Weight Lifting", time: 10, image: "https://images.pexels.com/photos/3289711/pexels-photo-3289711.jpeg" },
-  { title: "Cardio Blast", time: 15, image: "https://images.pexels.com/photos/1552249/pexels-photo-1552249.jpeg" },
-  { title: "HIIT Training", time: 10, image: "https://images.pexels.com/photos/669586/pexels-photo-669586.jpeg" }
+  { title: "Weight Lifting", time: 10, type: 'duration', image: "https://images.pexels.com/photos/3289711/pexels-photo-3289711.jpeg" },
+  { title: "Cardio Blast", time: 15, type: 'duration', image: "https://images.pexels.com/photos/1552249/pexels-photo-1552249.jpeg" },
+  { title: "HIIT Training", time: 10, type: 'set', sets: 3, reps: 5, image: "https://images.pexels.com/photos/1552106/pexels-photo-1552106.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load" }
 ];
 
 const StartWorkoutScreen = () => {
@@ -19,6 +19,7 @@ const StartWorkoutScreen = () => {
   const [currentWorkout, setCurrentWorkout] = useState(0);
   const [timeLeft, setTimeLeft] = useState(workouts[0].time);
   const [isRunning, setIsRunning] = useState(true);
+  const [currentRep, setCurrentRep] = useState(1);  // Track the current rep for "set" type workouts
 
   useEffect(() => {
     if (isRunning && timeLeft > 0) {
@@ -27,9 +28,13 @@ const StartWorkoutScreen = () => {
       }, 1000);
       return () => clearTimeout(timer);
     } else if (timeLeft === 0) {
-      handleWorkoutChange(currentWorkout + 1);
+      if (workouts[currentWorkout].type === 'set') {
+        handleRepCompletion();  // Handle rep-based completion
+      } else {
+        handleWorkoutChange(currentWorkout + 1);  // Handle duration-based workouts
+      }
     }
-  }, [isRunning, timeLeft]);
+  }, [isRunning, timeLeft, currentRep]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -42,10 +47,24 @@ const StartWorkoutScreen = () => {
       setCurrentWorkout(index);
       setTimeLeft(workouts[index].time);
       setIsRunning(true);
-      flatListRef.current?.scrollToIndex({ index, animated: true }); // Auto scroll to next workout
+      setCurrentRep(1);  // Reset rep count
+      flatListRef.current?.scrollToIndex({ index, animated: true });
     } else {
       Alert.alert("Good Job!", "You have completed all workouts.");
       setIsRunning(false);
+    }
+  };
+
+  const handleRepCompletion = () => {
+    const workout = workouts[currentWorkout];
+
+    if (currentRep < workout.reps) {
+      // Move to the next rep
+      setCurrentRep(prevRep => prevRep + 1);
+      setTimeLeft(workout.time);  // Reset the timer for the next rep
+    } else {
+      // All reps completed, move to the next workout
+      handleWorkoutChange(currentWorkout + 1);
     }
   };
 
@@ -101,6 +120,13 @@ const StartWorkoutScreen = () => {
               <Text style={styles.detailValue}>MUSCLES</Text>
             </View>
           </View>
+
+          {/* Additional Info for "set" type */}
+          {item.type === 'set' && (
+            <View style={styles.setInfoContainer}>
+              <Text style={styles.setInfo}>Rep {currentRep}/{item.reps}</Text>
+            </View>
+          )}
 
           {/* Swipe Up Prompt */}
           {index < workouts.length - 1 && (
@@ -182,6 +208,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     opacity: 0.8,
     textTransform: 'uppercase',
+  },
+  setInfoContainer: {
+    position: 'absolute',
+    bottom: 100,
+    alignItems: 'center',
+  },
+  setInfo: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
