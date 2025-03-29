@@ -52,10 +52,14 @@ const StartWorkoutScreen = () => {
       setCompletedSets([]); // Reset completed sets
       flatListRef.current?.scrollToIndex({ index, animated: true });
     } else {
-      Alert.alert("Good Job!", "You have completed all workouts.");
+      // If all workouts are completed, navigate to home
+      Alert.alert("Good Job!", "You have completed all workouts.", [
+        { text: "OK", onPress: () => navigation.navigate('HomeNav', { screen: 'Home' }) }, // Navigate to Home
+      ]);
       setIsRunning(false);
     }
   };
+  
 
   const handleSetCompletion = () => {
     const workout = workouts[currentWorkout];
